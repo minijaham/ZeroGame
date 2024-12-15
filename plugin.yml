@@ -1,0 +1,6 @@
+---
+name: ZeroGame
+version: 0.0.1
+main: minijaham\ZeroGame\Loader
+api: 5.23.2
+...
