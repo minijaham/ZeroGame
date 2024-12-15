@@ -37,7 +37,7 @@ final class Loader extends PluginBase
      * 
      * @var array<string, Manager>
      */
-    private array $managers = [];
+    private static array $managers = [];
 
     /**
      * PocketMine Load Function.
@@ -139,9 +139,9 @@ final class Loader extends PluginBase
      * @param Manager $manager
      * @return void
      */
-    public function register_manager(Manager $manager) : void
+    private function register_manager(Manager $manager) : void
     {
-        $this->managers[get_class($manager)] = $manager;
+        self::$managers[get_class($manager)] = $manager;
     }
 
     /**
@@ -150,13 +150,13 @@ final class Loader extends PluginBase
      * @param class-string<Manager> $className
      * @return Manager
      */
-    public function fetch(string $className) : Manager
+    public static function fetch(string $className) : Manager
     {
-        if (!isset($this->managers[$className])) {
+        if (!isset(self::$managers[$className])) {
             throw new ShitCodeException("Manager {$className} is not registered.");
         }
 
-        return $this->managers[$className];
+        return self::$managers[$className];
     }
 
     /**
@@ -166,7 +166,7 @@ final class Loader extends PluginBase
      */
     private function save_all(bool $shutdown) : void
     {
-        foreach ($this->managers as $manager) {
+        foreach (self::$managers as $manager) {
             if ($manager instanceof DataManager) {
                 $shutdown ? $manager->close_all() : $manager->update_all();
             }
