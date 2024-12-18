@@ -131,7 +131,7 @@ final class UsernameManager extends DataManager
      * @param array $data The raw data retrieved from the database.
      * @return string The formatted data
      */
-    protected function formatData(array $data) : string
+    protected function format_data(array $data) : string
     {
         return (string) $data["username"];
     }

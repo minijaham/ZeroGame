@@ -167,9 +167,10 @@ final class Loader extends PluginBase
     private function save_all(bool $shutdown) : void
     {
         foreach (self::$managers as $manager) {
-            if ($manager instanceof DataManager) {
-                $shutdown ? $manager->close_all() : $manager->update_all();
+            if (!$manager instanceof DataManager) {
+                continue;
             }
+            $shutdown ? $manager->close_all() : $manager->update_all();
         }
     }
 }

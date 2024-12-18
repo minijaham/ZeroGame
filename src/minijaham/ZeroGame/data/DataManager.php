@@ -169,7 +169,7 @@ abstract class DataManager extends Manager
      * @param array $data The raw data retrieved from the database.
      * @return mixed The formatted data
      */
-    protected function formatData(array $data) : mixed
+    protected function format_data(array $data) : mixed
     {
         return $data; // Default implementation returns the raw data.
     }
@@ -255,7 +255,7 @@ abstract class DataManager extends Manager
      */
     final protected function add_entry(UuidInterface $uuid, mixed $data) : void
     {
-        $this->data[$uuid->toString()] = $this->formatData($data);
+        $this->data[$uuid->toString()] = $this->format_data($data);
     }
 
     /**
@@ -318,16 +318,9 @@ abstract class DataManager extends Manager
     final public function delete(UuidInterface $uuid) : void
     {
         $this->runAsync(function() use ($uuid) {
-            try {
-                // If data exists in the entry.
-                $this->ensure_valid_entry($uuid);
-
-                if (($player = Server::getInstance()->getPlayerByUuid($uuid)) !== null) {
-                    $player->kick("An admin has initiated to reset all your data.");
-                    // simply kicking the player will handle the data reset, due to the join / leave listener.
-                }
-            } catch (InvalidArgumentException) {}
-            
+            if (($player = Server::getInstance()->getPlayerByUuid($uuid)) !== null) {
+                $player->kick("An admin has initiated to reset all your data."); // simply kicking the player will handle the data reset, due to the join / leave listener.
+            }
             yield from $this->getDatabase()->asyncChange($this->getDeleteQuery(), ["uuid" => $uuid->toString()]);
         });
     }
@@ -398,7 +391,7 @@ abstract class DataManager extends Manager
             throw new InvalidArgumentException("No data found for UUID: {$uuid->toString()}.");
         }
 
-        return $this->formatData($rows[0]);
+        return $this->format_data($rows[0]);
     }
 
     /**

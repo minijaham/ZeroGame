@@ -10,6 +10,7 @@ use minijaham\ZeroGame\data\database\Queries;
 
 use Ramsey\Uuid\UuidInterface;
 
+use Exception;
 use InvalidArgumentException;
 
 /**
@@ -133,7 +134,7 @@ final class EconomyManager extends DataManager
      * @param array $data The raw data retrieved from the database.
      * @return int The formatted data.
      */
-    protected function formatData(array $data) : int
+    protected function format_data(array $data) : int
     {
         return (int) $data["balance"];
     }
@@ -228,8 +229,9 @@ final class EconomyManager extends DataManager
         $payerBalance = $this->getData($payerUuid);
 
         if ($payerBalance < $amount) {
-            throw new Exception("송금할 골드가 충분하지 않습니다.");
+            throw new Exception("You don't have enough life to send.");
         }
+
         $this->updateMoneyInMemory($payerUuid, $amount, 'remove');
         $this->updateMoneyInMemory($receiverUuid, $amount, 'add');
     }
